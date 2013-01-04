@@ -1,0 +1,17 @@
+<package>
+  <description brief="knowrob_perception_tutorial">
+
+     knowrob_perception_tutorial
+
+     Tutorial explaining how to interface perception components with the
+     KnowRob knowledge base
+
+  </description>
+  <author>Moritz Tenorth</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/knowrob_perception_tutorial</url>
+
+</package>
+
+
