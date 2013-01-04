@@ -10,7 +10,7 @@
   <author>Moritz Tenorth</author>
   <license>BSD</license>
 
-  <depend package="rosjava"/>
+  <depend package="rosjava_jni"/>
   <depend package="knowrob_objects"/>
 
   
