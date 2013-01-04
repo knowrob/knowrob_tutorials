@@ -9,6 +9,11 @@
   </description>
   <author>Moritz Tenorth</author>
   <license>BSD</license>
+
+  <depend package="rosjava"/>
+  <depend package="knowrob_objects"/>
+
+  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/knowrob_perception_tutorial</url>
 
