@@ -41,39 +41,14 @@ public class DummyClient {
 
 
 	/**
-	 * Constructor: initializes the ROS environment
-	 *
-	 * @param node_name A unique node name
-	 */
-	public DummyClient(String node_name) {
-		initRos(node_name);
-	}
-
-
-	/**
-	 * Initialize the ROS environment if it has not yet been initialized
-	 *
-	 * @param node_name A unique node name
-	 */
-	protected static void initRos(String node_name) {
-
-		ros = Ros.getInstance();
-
-		if(!Ros.getInstance().isInitialized()) {
-			ros.init(node_name);
-		}
-		n = ros.createNodeHandle();
-
-	}
-
-
-	/**
 	 * Call the dummy_object_detector service and return the result
 	 * 
 	 * @return An ObjectDetection with the pose and type of the detected object
 	 */
-	public ObjectDetection callObjDetectionService() {
+	public static ObjectDetection callObjDetectionService() {
 
+		initRos("knowrob_tutorial_client");
+		
 		ObjectDetection r=null;
 		try {
 
@@ -91,6 +66,24 @@ public class DummyClient {
 		}
 		return r;
 	}
+
+	
+	/**
+	 * Initialize the ROS environment if it has not yet been initialized
+	 *
+	 * @param node_name A unique node name
+	 */
+	protected static void initRos(String node_name) {
+
+		ros = Ros.getInstance();
+
+		if(!Ros.getInstance().isInitialized()) {
+			ros.init(node_name);
+		}
+		n = ros.createNodeHandle();
+
+	}
+
 
 
 	/**
