@@ -99,7 +99,7 @@ public class DummyService {
 		// start the service and spin
 		try {
 			
-			n.advertiseService("dummy_object_detection", new DetectObject(), scb);
+			n.advertiseService("/dummy_object_detector", new DetectObject(), scb);
 			ros.spin();
 			
 		} catch (RosException e) {
