@@ -19,8 +19,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % dependencies
 
-:- register_ros_package(knowrob_perception).
-:- register_ros_package(knowrob_coordinates).
+:- register_ros_package(knowrob_common).
+:- register_ros_package(knowrob_objects).
 
 :- use_module(library('perception_tutorial')).
 
@@ -30,4 +30,3 @@
 
 :- owl_parser:owl_parse('../owl/knowrob_perception_tutorial.owl', false, false, true).
 :- rdf_db:rdf_register_ns(knowrob_perception_tutorial, 'http://ias.cs.tum.edu/kb/knowrob_perception_tutorial.owl#', [keep(true)]).
-

@@ -61,6 +61,11 @@ public class DummyService {
 		obj.pose.pose.position.x = rand.nextDouble() * 3;
 		obj.pose.pose.position.y = rand.nextDouble() * 3;
 		obj.pose.pose.position.z = rand.nextDouble() * 3;
+		
+		obj.pose.pose.orientation.w = 1;
+		obj.pose.pose.orientation.x = 0;
+		obj.pose.pose.orientation.y = 0;
+		obj.pose.pose.orientation.z = 0;
 
 		return obj;
 		

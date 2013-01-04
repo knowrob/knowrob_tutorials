@@ -31,7 +31,7 @@
     <!-- Definition of the DummyObjectDetection class that describes the 
          type of perceptions associated with the created object instances -->
 
-    <owl:Class rdf:about="#DummyObjectDetection">
+    <owl:Class rdf:about="&knowrob;DummyObjectDetection">
         <rdfs:subClassOf rdf:resource="&knowrob;VisualPerception"/>
     </owl:Class>
 

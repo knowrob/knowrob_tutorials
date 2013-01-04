@@ -52,7 +52,7 @@
 %
 % @param ObjInst IRI of the created object instance
 %
-comp_object_detection(ObjInst) :-
+comp_object_detection(_ObjClass, ObjInst) :-
 
   % Call the DetectObject service for retrieving a new object detection.
   % The method returns a reference to the Java ObjectDetection message object
@@ -71,7 +71,7 @@ comp_object_detection(ObjInst) :-
   jpl_get(PoseStamped, 'pose', PoseQuat),
 
   jpl_call('edu.tum.cs.ias.knowrob.tutorial.DummyClient', 'quaternionToMatrix', [PoseQuat], PoseMatrix),
-  matrix4d_to_list(PoseMatrix,PoseList),
+  knowrob_coordinates:matrix4d_to_list(PoseMatrix,PoseList),
 
 
   % Create the object representations in the knowledge base

@@ -92,7 +92,7 @@ public class DummyClient {
 	 * @param p Pose (ROS geometry_msgs)
 	 * @return 4x4 pose matrix
 	 */
-	protected static Matrix4d quaternionToMatrix(Pose p) {
+	public static Matrix4d quaternionToMatrix(Pose p) {
 
 		return new Matrix4d(new Quat4d(p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w), 
 				new Vector3d(p.position.x, p.position.y, p.position.z), 1.0);

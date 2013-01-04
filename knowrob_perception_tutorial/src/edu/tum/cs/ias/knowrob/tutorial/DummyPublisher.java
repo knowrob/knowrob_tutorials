@@ -22,7 +22,6 @@ import java.util.Random;
 
 import ros.*;
 import ros.communication.Time;
-import ros.pkg.geometry_msgs.msg.Quaternion;
 import ros.pkg.knowrob_perception_tutorial.msg.ObjectDetection;
 
 
@@ -62,9 +61,9 @@ public class DummyPublisher {
 		obj.pose.pose.position.z = rand.nextDouble() * 3;
 
 		obj.pose.pose.orientation.w = 1;
-		obj.pose.pose.orientation.x = 1;
-		obj.pose.pose.orientation.y = 1;
-		obj.pose.pose.orientation.z = 1;
+		obj.pose.pose.orientation.x = 0;
+		obj.pose.pose.orientation.y = 0;
+		obj.pose.pose.orientation.z = 0;
 		
 		
 		return obj;
