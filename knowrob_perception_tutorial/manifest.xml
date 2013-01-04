@@ -13,9 +13,12 @@
   <depend package="rosjava_jni"/>
   <depend package="knowrob_objects"/>
 
-  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/knowrob_perception_tutorial</url>
+
+  <export>
+    <java classpath="${prefix}/bin"/>
+  </export>
 
 </package>
 
