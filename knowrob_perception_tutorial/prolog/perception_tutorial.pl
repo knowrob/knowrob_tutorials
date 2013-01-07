@@ -52,7 +52,7 @@
 %
 % @param ObjInst IRI of the created object instance
 %
-comp_object_detection(_ObjClass, ObjInst) :-
+comp_object_detection(ObjInst, _ObjClass) :-
 
   % Call the DetectObject service for retrieving a new object detection.
   % The method returns a reference to the Java ObjectDetection message object
