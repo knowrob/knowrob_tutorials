@@ -17,6 +17,9 @@
 
 package org.knowrob.tutorials;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import geometry_msgs.Pose;
 
 import javax.vecmath.Matrix4d;
@@ -45,6 +48,7 @@ public class DummyClient extends AbstractNodeMain {
 
 	ServiceClient<knowrob_tutorial_msgs.DetectObjectRequest, knowrob_tutorial_msgs.DetectObjectResponse> serviceClient;
 	ConnectedNode node;
+	BlockingQueue<ObjectDetection> detections;
 	
 	
 	@Override
@@ -58,6 +62,7 @@ public class DummyClient extends AbstractNodeMain {
 
 		// save reference to the ROS node
 		this.node = connectedNode;
+		this.detections = new LinkedBlockingQueue<ObjectDetection>();
 		
 	}
 
@@ -79,12 +84,18 @@ public class DummyClient extends AbstractNodeMain {
 		
 		final knowrob_tutorial_msgs.DetectObjectRequest req = serviceClient.newMessage();
 		
+		ObjectDetection r =  node.getTopicMessageFactory().newFromType(ObjectDetection._TYPE);
 		
 		// call the service and 
 		serviceClient.call(req, new ServiceResponseListener<knowrob_tutorial_msgs.DetectObjectResponse>() {
 			
 			@Override
 			public void onSuccess(knowrob_tutorial_msgs.DetectObjectResponse response) {
+				try {
+					detections.put(response.getObj());
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 				node.getLog().info(String.format("Detected object of type %d", response.getObj().getType()));
 			}
 
@@ -93,6 +104,14 @@ public class DummyClient extends AbstractNodeMain {
 				throw new RosRuntimeException(e);
 			}
 		});
+		
+		// wait for result
+		try {
+			r = detections.take();
+		} catch (InterruptedException e1) {
+			e1.printStackTrace();
+		}
+		
 		
 		// TODO: build structure using queue to return the result of the service call
 		return r;

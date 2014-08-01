@@ -20,6 +20,14 @@ package org.knowrob.tutorials;
 
 import java.util.Random;
 
+import knowrob_tutorial_msgs.ObjectDetection;
+
+import org.ros.concurrent.CancellableLoop;
+import org.ros.namespace.GraphName;
+import org.ros.node.AbstractNodeMain;
+import org.ros.node.ConnectedNode;
+
+import org.ros.node.topic.Publisher;
 
 
 /**
@@ -28,11 +36,44 @@ import java.util.Random;
  * @author Moritz Tenorth, tenorth@cs.uni-bremen.de
  *
  */
-public class DummyPublisher {
+public class DummyPublisher extends AbstractNodeMain {
 
-	static Random rand;
-
+	Random rand;
+	ConnectedNode node;
 	static String[] obj_types = new String[]{"Cup", "DinnerPlate", "TableKnife", "DinnerFork", "SoupSpoon", "DrinkingBottle"};
+
+
+	@Override
+	public GraphName getDefaultNodeName() {
+		return GraphName.of("knowrob_tutorial_dummy_publisher");
+	}
+
+
+	@Override
+	public void onStart(final ConnectedNode connectedNode) {
+
+		// save reference to the ROS node
+		this.node = connectedNode;
+		this.rand = new Random(node.getCurrentTime().nsecs);
+		
+		final Publisher<knowrob_tutorial_msgs.ObjectDetection> publisher =
+				connectedNode.newPublisher("dummy_object_detections", knowrob_tutorial_msgs.ObjectDetection._TYPE);
+
+		// This CancellableLoop will be canceled automatically when the node shuts down.
+		connectedNode.executeCancellableLoop(new CancellableLoop() {
+			
+			@Override
+			protected void loop() throws InterruptedException {
+
+				ObjectDetection obj = generateDummyObjectDetection();
+				publisher.publish(obj);
+
+				System.out.println("detected " + obj.getType());
+				Thread.sleep(1000);
+			}
+		});
+	}
+
 
 
 
@@ -41,70 +82,25 @@ public class DummyPublisher {
 	 * 
 	 * @return Object detection message
 	 */
-	private static ObjectDetection generateDummyObjectDetection() {
+	private ObjectDetection generateDummyObjectDetection() {
 
-		ObjectDetection obj =  new ObjectDetection();
+		ObjectDetection obj =  node.getTopicMessageFactory().newFromType(ObjectDetection._TYPE);
 
-		obj.type = obj_types[rand.nextInt(6)];
+		obj.setType(obj_types[rand.nextInt(6)]);
 
-		obj.pose.header.frame_id = "map";
-		obj.pose.header.stamp = Time.now();
+		obj.getPose().getHeader().setFrameId("map");
+		obj.getPose().getHeader().setStamp(node.getCurrentTime());
 
-		obj.pose.pose.position.x = rand.nextDouble() * 3;
-		obj.pose.pose.position.y = rand.nextDouble() * 3;
-		obj.pose.pose.position.z = rand.nextDouble() * 3;
+		obj.getPose().getPose().getPosition().setX(rand.nextDouble() * 3);
+		obj.getPose().getPose().getPosition().setY(rand.nextDouble() * 3);
+		obj.getPose().getPose().getPosition().setZ(rand.nextDouble() * 3);
 
-		obj.pose.pose.orientation.w = 1;
-		obj.pose.pose.orientation.x = 0;
-		obj.pose.pose.orientation.y = 0;
-		obj.pose.pose.orientation.z = 0;
-		
-		
+		obj.getPose().getPose().getOrientation().setW(1);
+		obj.getPose().getPose().getOrientation().setX(0);
+		obj.getPose().getPose().getOrientation().setY(0);
+		obj.getPose().getPose().getOrientation().setZ(0);
+
 		return obj;
-		
-	}
 
-
-	public static void main(String[] args) {
-
-		Publisher<ObjectDetection> pub = null;
-		
-		ros = Ros.getInstance();
-
-		if(!Ros.getInstance().isInitialized()) {
-			ros.init("knowrob_tutorial_dummy_publisher");
-		}
-		n = ros.createNodeHandle();
-		
-		rand = new Random(Time.now().nsecs);
-		
-		try {
-
-			// create publisher for the "/dummy_object_detections" topic
-			pub = n.advertise("/dummy_object_detections", new ObjectDetection(), 100);
-			
-			while(n.ok()) {
-				
-				// generate fake object detections using the generateDummyObjectDetection 
-				// method and publish on the topic every second
-				
-				ObjectDetection obj = generateDummyObjectDetection();
-				pub.publish(obj);
-				
-				System.out.println("detected " + obj.type);
-				
-				Thread.sleep(1000);
-			}
-			
-		} catch (RosException e) {
-			e.printStackTrace();
-			
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-			
-		} finally {
-			if(pub!=null)
-				pub.shutdown();
-		}
 	}
 }

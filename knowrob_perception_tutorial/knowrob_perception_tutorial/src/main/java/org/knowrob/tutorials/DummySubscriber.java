@@ -17,11 +17,24 @@
 
 package org.knowrob.tutorials;
 
+import geometry_msgs.Pose;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 import javax.vecmath.Matrix4d;
 import javax.vecmath.Quat4d;
 import javax.vecmath.Vector3d;
 
+import knowrob_tutorial_msgs.ObjectDetection;
+
 import org.knowrob.prolog.PrologInterface;
+import org.ros.concurrent.CancellableLoop;
+import org.ros.message.MessageListener;
+import org.ros.namespace.GraphName;
+import org.ros.node.AbstractNodeMain;
+import org.ros.node.ConnectedNode;
+import org.ros.node.topic.Subscriber;
 
 
 /**
@@ -30,80 +43,47 @@ import org.knowrob.prolog.PrologInterface;
  * @author Moritz Tenorth, tenorth@cs.uni-bremen.de
  *
  */
-public class DummySubscriber {
+public class DummySubscriber extends AbstractNodeMain {
 
-	Subscriber.QueueingCallback<ObjectDetection> callback;
-	Subscriber<ObjectDetection> sub;
-
-	Thread listenToObjDetections;
+	ConnectedNode node;
+	BlockingQueue<ObjectDetection> detections;
 	Thread updateKnowRobObjDetections;
-
-
-	/**
-	 * Constructor: initializes the ROS environment
-	 *
-	 * @param node_name A unique node name
-	 */
-	public DummySubscriber(String node_name) {
-
-		initRos(node_name);
-		callback = new Subscriber.QueueingCallback<ObjectDetection>();
+	
+	
+	@Override
+	public GraphName getDefaultNodeName() {
+		return GraphName.of("knowrob_tutorial_dummy_subscriber");
 	}
+	
+	@Override
+	public void onStart(final ConnectedNode connectedNode) {
 
+		// save reference to the ROS node
+		this.node = connectedNode;
+		
+		this.detections = new LinkedBlockingQueue<ObjectDetection>();
 
-	/**
-	 * Start threads that listen to object detections and add the 
-	 * data to KnowRob
-	 */
-	public void startObjDetectionsListener() {
-
-		listenToObjDetections = new Thread( new ListenerThread() );
-		listenToObjDetections.start();
-
-		updateKnowRobObjDetections = new Thread( new UpdateKnowrobThread() );
-		updateKnowRobObjDetections.start();
-	}
-
-
-	/**
-	 * Initialize the ROS environment if it has not yet been initialized
-	 *
-	 * @param node_name A unique node name
-	 */
-	protected static void initRos(String node_name) {
-
-		ros = Ros.getInstance();
-
-		if(!Ros.getInstance().isInitialized()) {
-			ros.init(node_name);
-		}
-		n = ros.createNodeHandle();
-
-	}
-
-
-	/**
-	 * Thread for listening to the object detections; puts the 
-	 * results into a QueuingCallback buffer for further processing
-	 *
-	 * @author Moritz Tenorth, tenorth@cs.uni-bremen.de
-	 *
-	 */
-	public class ListenerThread implements Runnable {
-
-		@Override 
-		public void run() {
-
-			try {
-				sub = n.subscribe("/dummy_object_detections", new ObjectDetection(), callback, 10);
-				n.spin();
-				sub.shutdown();
-
-			} catch(RosException e) {
+		
+		// start subscriber in a separate thread that fills the 'detections' queue
+	    Subscriber<ObjectDetection> subscriber = connectedNode.newSubscriber("chatter", ObjectDetection._TYPE);
+	    subscriber.addMessageListener(new MessageListener<ObjectDetection>() {
+	      @Override
+	      public void onNewMessage(knowrob_tutorial_msgs.ObjectDetection message) {
+	    	  try {
+				detections.put(message);
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
-		}
+	      }
+	    });
+
+	    
+	    // start thread that reads the detections and adds them to KnowRob
+		updateKnowRobObjDetections = new Thread( new UpdateKnowrobThread() );
+		updateKnowRobObjDetections.start();
+		
 	}
+
 
 
 	/**
@@ -118,29 +98,30 @@ public class DummySubscriber {
 		@Override 
 		public void run() {
 
-			ObjectDetection obj;
-
 			try {
-
-				while (n.isValid()) {
-
-					obj = callback.pop();
-
-					Matrix4d p = quaternionToMatrix(obj.pose.pose);					
-					String q = "create_object_perception(" +
-								"'http://ias.cs.tum.edu/kb/knowrob.owl#"+obj.type+"', [" 
-								+ p.m00 + ","+ p.m01 + ","+ p.m02 + ","+ p.m03 + ","
-								+ p.m10 + ","+ p.m11 + ","+ p.m12 + ","+ p.m13 + ","
-								+ p.m20 + ","+ p.m21 + ","+ p.m22 + ","+ p.m23 + ","
-								+ p.m30 + ","+ p.m31 + ","+ p.m32 + ","+ p.m33 +
-								"], ['DummyObjectDetection'], ObjInst)";
-
-					// uncomment to see the resulting query printed to the KnowRob console
-					//System.err.println(q);
+				
+				node.executeCancellableLoop(new CancellableLoop() {
 					
-					PrologInterface.executeQuery(q);
-					n.spinOnce();
-				}
+					@Override
+					protected void loop() throws InterruptedException {
+
+						ObjectDetection obj = detections.take();
+
+						Matrix4d p = quaternionToMatrix(obj.getPose().getPose());					
+						String q = "create_object_perception(" +
+									"'http://ias.cs.tum.edu/kb/knowrob.owl#"+obj.getType()+"', [" 
+									+ p.m00 + ","+ p.m01 + ","+ p.m02 + ","+ p.m03 + ","
+									+ p.m10 + ","+ p.m11 + ","+ p.m12 + ","+ p.m13 + ","
+									+ p.m20 + ","+ p.m21 + ","+ p.m22 + ","+ p.m23 + ","
+									+ p.m30 + ","+ p.m31 + ","+ p.m32 + ","+ p.m33 +
+									"], ['DummyObjectDetection'], ObjInst)";
+
+						// uncomment to see the resulting query printed to the KnowRob console
+						//System.err.println(q);
+						
+						PrologInterface.executeQuery(q);
+					}
+				});
 				
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -155,9 +136,9 @@ public class DummySubscriber {
 	 * @param p Pose (ROS geometry_msgs)
 	 * @return 4x4 pose matrix
 	 */
-	protected static Matrix4d quaternionToMatrix(Pose p) {
+	public static Matrix4d quaternionToMatrix(Pose p) {
 
-		return new Matrix4d(new Quat4d(p.orientation.x, p.orientation.y, p.orientation.z, p.orientation.w), 
-				new Vector3d(p.position.x, p.position.y, p.position.z), 1.0);
+		return new Matrix4d(new Quat4d(p.getOrientation().getX(), p.getOrientation().getY(), p.getOrientation().getZ(), p.getOrientation().getW()), 
+				new Vector3d(p.getPosition().getX(), p.getPosition().getY(), p.getPosition().getZ()), 1.0);
 	}
 }
