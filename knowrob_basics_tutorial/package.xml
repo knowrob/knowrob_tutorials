@@ -1,0 +1,23 @@
+<package>
+  <name>knowrob_basics_tutorial</name>
+  <version>1.0.0</version>
+  <description>A tutorial for learning the basics about the KnowRob knowledge base</description>
+  <maintainer email="tenorth@cs.uni-bremen.de">Moritz Tenorth</maintainer>
+
+  <license>LGPL</license>
+
+  <url type="website">http://knowrob.org/doc/knowrob_basics</url>
+  <url type="bugtracker">https://github.com/knowrob/knowrob_tutorials/issues</url>
+
+  <author>Moritz Tenorth</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+
+  <build_depend>knowrob_map_tools</build_depend>
+  <run_depend>knowrob_map_tools</run_depend>
+
+  <export>
+    <rosdoc config="rosdoc.yaml"/>
+  </export>
+
+</package>
