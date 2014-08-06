@@ -21,8 +21,8 @@
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
      xmlns:knowrob="http://ias.cs.tum.edu/kb/knowrob.owl#">
-    <owl:Ontology rdf:about="">
-        <owl:imports rdf:resource="http://ias.cs.tum.edu/kb/knowrob.owl"/>
+    <owl:Ontology rdf:about="http://ias.cs.tum.edu/kb/coffeecup.owl">
+        <owl:imports rdf:resource="package://knowrob_common/owl/knowrob.owl"/>
     </owl:Ontology>
 
 

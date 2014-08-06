@@ -19,9 +19,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % dependencies
 
-:- register_ros_package(mod_vis).
-:- register_ros_package(ias_semantic_map).
+:- register_ros_package(knowrob_vis).
+:- register_ros_package(knowrob_map_tools).
+:- register_ros_package(knowrob_map_data).
 
+:- owl_parse('package://knowrob_map_data/owl/ccrl2_semantic_map.owl').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % parse OWL files, register name spaces
