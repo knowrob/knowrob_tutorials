@@ -62,10 +62,19 @@ public class DummySubscriber extends AbstractNodeMain {
 		this.node = connectedNode;
 		
 		this.detections = new LinkedBlockingQueue<ObjectDetection>();
-
+		
+		
+		// wait for node to be ready
+		try {
+			while(node ==null) {
+				Thread.sleep(200);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		// start subscriber in a separate thread that fills the 'detections' queue
-	    Subscriber<ObjectDetection> subscriber = connectedNode.newSubscriber("chatter", ObjectDetection._TYPE);
+	    Subscriber<ObjectDetection> subscriber = connectedNode.newSubscriber("dummy_object_detections", ObjectDetection._TYPE);
 	    subscriber.addMessageListener(new MessageListener<ObjectDetection>() {
 	      @Override
 	      public void onNewMessage(knowrob_tutorial_msgs.ObjectDetection message) {
@@ -117,7 +126,7 @@ public class DummySubscriber extends AbstractNodeMain {
 									"], ['DummyObjectDetection'], ObjInst)";
 
 						// uncomment to see the resulting query printed to the KnowRob console
-						//System.err.println(q);
+						System.err.println(q);
 						
 						PrologInterface.executeQuery(q);
 					}

@@ -1,9 +1,0 @@
-.classpath
-.project
-bin
-build
-msg_gen
-srv_gen
-src/knowrob_perception_tutorial
-*~
-owl/knowrob_perception_tutorial.owl

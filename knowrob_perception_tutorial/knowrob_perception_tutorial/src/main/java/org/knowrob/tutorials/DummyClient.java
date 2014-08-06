@@ -20,14 +20,6 @@ package org.knowrob.tutorials;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import geometry_msgs.Pose;
-
-import javax.vecmath.Matrix4d;
-import javax.vecmath.Quat4d;
-import javax.vecmath.Vector3d;
-
-import knowrob_tutorial_msgs.ObjectDetection;
-
 import org.ros.exception.RemoteException;
 import org.ros.exception.RosRuntimeException;
 import org.ros.exception.ServiceNotFoundException;
@@ -48,7 +40,7 @@ public class DummyClient extends AbstractNodeMain {
 
 	ServiceClient<knowrob_tutorial_msgs.DetectObjectRequest, knowrob_tutorial_msgs.DetectObjectResponse> serviceClient;
 	ConnectedNode node;
-	BlockingQueue<ObjectDetection> detections;
+	BlockingQueue<knowrob_tutorial_msgs.ObjectDetection> detections;
 	
 	
 	@Override
@@ -59,11 +51,11 @@ public class DummyClient extends AbstractNodeMain {
 
 	@Override
 	public void onStart(final ConnectedNode connectedNode) {
-
+		
 		// save reference to the ROS node
 		this.node = connectedNode;
-		this.detections = new LinkedBlockingQueue<ObjectDetection>();
-		
+		this.detections = new LinkedBlockingQueue<knowrob_tutorial_msgs.ObjectDetection>();
+
 	}
 
 
@@ -73,6 +65,15 @@ public class DummyClient extends AbstractNodeMain {
 	 * @return An ObjectDetection with the pose and type of the detected object
 	 */
 	public ObjectDetection callObjDetectionService() {
+		
+		// wait for node to be ready
+		try {
+			while(node ==null) {
+				Thread.sleep(200);
+			}
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		// start service client
 		try {
@@ -84,7 +85,7 @@ public class DummyClient extends AbstractNodeMain {
 		
 		final knowrob_tutorial_msgs.DetectObjectRequest req = serviceClient.newMessage();
 		
-		ObjectDetection r =  node.getTopicMessageFactory().newFromType(ObjectDetection._TYPE);
+		knowrob_tutorial_msgs.ObjectDetection r =  node.getTopicMessageFactory().newFromType(knowrob_tutorial_msgs.ObjectDetection._TYPE);
 		
 		// call the service and 
 		serviceClient.call(req, new ServiceResponseListener<knowrob_tutorial_msgs.DetectObjectResponse>() {
@@ -96,7 +97,7 @@ public class DummyClient extends AbstractNodeMain {
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
-				node.getLog().info(String.format("Detected object of type %d", response.getObj().getType()));
+				node.getLog().info(String.format("Detected object of type %s", response.getObj().getType()));
 			}
 
 			@Override
@@ -112,20 +113,7 @@ public class DummyClient extends AbstractNodeMain {
 			e1.printStackTrace();
 		}
 		
-		
-		// TODO: build structure using queue to return the result of the service call
-		return r;
+		return new ObjectDetection(r);
 	}
 
-	/**
-	 * Utility method: convert a ROS pose into a Java vecmath 4x4 pose matrix
-	 *
-	 * @param p Pose (ROS geometry_msgs)
-	 * @return 4x4 pose matrix
-	 */
-	public static Matrix4d quaternionToMatrix(Pose p) {
-
-		return new Matrix4d(new Quat4d(p.getOrientation().getX(), p.getOrientation().getY(), p.getOrientation().getZ(), p.getOrientation().getW()), 
-				new Vector3d(p.getPosition().getX(), p.getPosition().getY(), p.getPosition().getZ()), 1.0);
-	}
 }

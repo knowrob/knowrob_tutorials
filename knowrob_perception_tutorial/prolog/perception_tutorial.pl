@@ -28,11 +28,10 @@
       obj_detections_listener/1
     ]).
 
-:- use_module(library('semweb/rdfs')).
-:- use_module(library('semweb/owl')).
 :- use_module(library('semweb/rdf_db')).
-:- use_module(library('semweb/rdfs_computable')).
-:- use_module(library('thea/owl_parser')).
+:- use_module(library('semweb/rdfs')).
+:- use_module(library('owl')).
+:- use_module(library('owl_parser')).
 :- use_module(library('knowrob_coordinates')).
 
 
@@ -56,21 +55,17 @@ comp_object_detection(ObjInst, _ObjClass) :-
 
   % Call the DetectObject service for retrieving a new object detection.
   % The method returns a reference to the Java ObjectDetection message object
-  jpl_call('edu.tum.cs.ias.knowrob.tutorial.DummyClient', 'callObjDetectionService', [], ObjectDetection),
+  jpl_new('org.knowrob.tutorials.DummyClient', [], Client),
+  jpl_list_to_array(['org.knowrob.tutorials.DummyClient'], Arr),
+  jpl_call('org.knowrob.utils.ros.RosUtilities', runRosjavaNode, [Client, Arr], _),
 
-
-  % Read information from the ObjectDetection object
+  jpl_call(Client, 'callObjDetectionService', [], ObjectDetection),
 
   % Read type -> simple string; combine with KnowRob namespace
-  jpl_get(ObjectDetection, 'type', T),
+  jpl_call(ObjectDetection, 'getType', [], T),
   atom_concat('http://ias.cs.tum.edu/kb/knowrob.owl#', T, Type),
 
-
-  % Read pose -> convert from quaternion to pose list
-  jpl_get(ObjectDetection, 'pose', PoseStamped),
-  jpl_get(PoseStamped, 'pose', PoseQuat),
-
-  jpl_call('edu.tum.cs.ias.knowrob.tutorial.DummyClient', 'quaternionToMatrix', [PoseQuat], PoseMatrix),
+  jpl_call(ObjectDetection, 'getPose', [], PoseMatrix),
   knowrob_coordinates:matrix4d_to_list(PoseMatrix,PoseList),
 
 
@@ -100,8 +95,9 @@ comp_object_detection(ObjInst, _ObjClass) :-
 % @param Listener Reference to the Java DummySubscriber object
 %
 obj_detections_listener(Listener) :-
-  jpl_new('edu.tum.cs.ias.knowrob.tutorial.DummySubscriber', ['knowrob_tutorial_listener'], Listener),
-  jpl_call(Listener, 'startObjDetectionsListener', [], _).
+  jpl_new('org.knowrob.tutorials.DummySubscriber', [], Listener),
+  jpl_list_to_array(['org.knowrob.tutorials.DummySubscriber'], Arr),
+  jpl_call('org.knowrob.utils.ros.RosUtilities', runRosjavaNode, [Listener, Arr], _).
 
 
 

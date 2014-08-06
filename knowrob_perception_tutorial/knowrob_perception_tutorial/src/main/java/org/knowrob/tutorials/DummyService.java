@@ -25,7 +25,6 @@ import org.ros.node.AbstractNodeMain;
 import org.ros.node.ConnectedNode;
 import org.ros.node.service.ServiceResponseBuilder;
 
-import knowrob_tutorial_msgs.*;
 
 /**
  * Simple service that return object detections at random positions
@@ -55,7 +54,7 @@ public class DummyService extends AbstractNodeMain {
 		rand = new Random(node.getCurrentTime().nsecs);
 		
 		connectedNode.newServiceServer("dummy_object_detector", 
-				DetectObject._TYPE,
+				knowrob_tutorial_msgs.DetectObject._TYPE,
 				new DetectObjCallback());
 	}
 
@@ -76,9 +75,9 @@ public class DummyService extends AbstractNodeMain {
 	 * 
 	 * @return Object detection message
 	 */
-	private ObjectDetection generateDummyObjectDetection() {
+	private knowrob_tutorial_msgs.ObjectDetection generateDummyObjectDetection() {
 
-		ObjectDetection obj =  node.getTopicMessageFactory().newFromType(ObjectDetection._TYPE);
+		knowrob_tutorial_msgs.ObjectDetection obj =  node.getTopicMessageFactory().newFromType(knowrob_tutorial_msgs.ObjectDetection._TYPE);
 
 		obj.setType(obj_types[rand.nextInt(6)]);
 
