@@ -35,7 +35,7 @@
 :- use_module(library('knowrob_coordinates')).
 
 
-:- rdf_db:rdf_register_ns(knowrob,  'http://ias.cs.tum.edu/kb/knowrob.owl#',  [keep(true)]).
+:- rdf_db:rdf_register_ns(knowrob,  'http://knowrob.org/kb/knowrob.owl#',  [keep(true)]).
 
 
 
@@ -63,7 +63,7 @@ comp_object_detection(ObjInst, _ObjClass) :-
 
   % Read type -> simple string; combine with KnowRob namespace
   jpl_call(ObjectDetection, 'getType', [], T),
-  atom_concat('http://ias.cs.tum.edu/kb/knowrob.owl#', T, Type),
+  atom_concat('http://knowrob.org/kb/knowrob.owl#', T, Type),
 
   jpl_call(ObjectDetection, 'getPose', [], PoseMatrix),
   knowrob_coordinates:matrix4d_to_list(PoseMatrix,PoseList),

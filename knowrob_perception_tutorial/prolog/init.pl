@@ -29,4 +29,4 @@
 % parse OWL files, register name spaces
 
 :- owl_parse('package://knowrob_perception_tutorial/owl/knowrob_perception_tutorial.owl').
-:- rdf_db:rdf_register_ns(knowrob_perception_tutorial, 'http://ias.cs.tum.edu/kb/knowrob_perception_tutorial.owl#', [keep(true)]).
+:- rdf_db:rdf_register_ns(knowrob_perception_tutorial, 'http://knowrob.org/kb/knowrob_perception_tutorial.owl#', [keep(true)]).

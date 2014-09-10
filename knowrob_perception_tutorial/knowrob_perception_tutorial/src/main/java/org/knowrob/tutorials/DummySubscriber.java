@@ -118,7 +118,7 @@ public class DummySubscriber extends AbstractNodeMain {
 
 						Matrix4d p = quaternionToMatrix(obj.getPose().getPose());					
 						String q = "create_object_perception(" +
-									"'http://ias.cs.tum.edu/kb/knowrob.owl#"+obj.getType()+"', [" 
+									"'http://knowrob.org/kb/knowrob.owl#"+obj.getType()+"', [" 
 									+ p.m00 + ","+ p.m01 + ","+ p.m02 + ","+ p.m03 + ","
 									+ p.m10 + ","+ p.m11 + ","+ p.m12 + ","+ p.m13 + ","
 									+ p.m20 + ","+ p.m21 + ","+ p.m22 + ","+ p.m23 + ","

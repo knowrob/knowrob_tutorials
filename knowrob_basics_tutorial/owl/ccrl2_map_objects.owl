@@ -5,22 +5,22 @@
     <!ENTITY owl2 "http://www.w3.org/2006/12/owl2#" >
     <!ENTITY xsd "http://www.w3.org/2001/XMLSchema#" >
     <!ENTITY owl2xml "http://www.w3.org/2006/12/owl2-xml#" >
-    <!ENTITY knowrob "http://ias.cs.tum.edu/kb/knowrob.owl#" >
+    <!ENTITY knowrob "http://knowrob.org/kb/knowrob.owl#" >
     <!ENTITY rdfs "http://www.w3.org/2000/01/rdf-schema#" >
     <!ENTITY rdf "http://www.w3.org/1999/02/22-rdf-syntax-ns#" >
-    <!ENTITY map_obj "http://ias.cs.tum.edu/kb/ccrl2_map_objects.owl#" >
+    <!ENTITY map_obj "http://knowrob.org/kb/ccrl2_map_objects.owl#" >
     <!ENTITY protege "http://protege.stanford.edu/plugins/owl/protege#" >
 ]>
 
-<rdf:RDF xmlns="http://ias.cs.tum.edu/kb/ias_semantic_map.owl#"
-     xml:base="http://ias.cs.tum.edu/kb/ias_semantic_map.owl"
+<rdf:RDF xmlns="http://knowrob.org/kb/ias_semantic_map.owl#"
+     xml:base="http://knowrob.org/kb/ias_semantic_map.owl"
      xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
-     xmlns:map="http://ias.cs.tum.edu/kb/ias_semantic_map.owl#"
+     xmlns:map="http://knowrob.org/kb/ias_semantic_map.owl#"
      xmlns:owl="http://www.w3.org/2002/07/owl#"
      xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
      xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-     xmlns:knowrob="http://ias.cs.tum.edu/kb/knowrob.owl#">
-    <owl:Ontology rdf:about="http://ias.cs.tum.edu/kb/ias_semantic_map.owl">
+     xmlns:knowrob="http://knowrob.org/kb/knowrob.owl#">
+    <owl:Ontology rdf:about="http://knowrob.org/kb/ias_semantic_map.owl">
         <owl:imports rdf:resource="package://knowrob_common/owl/knowrob.owl"/>
     </owl:Ontology>
 

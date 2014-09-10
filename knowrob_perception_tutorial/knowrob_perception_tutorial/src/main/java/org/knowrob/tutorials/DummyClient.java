@@ -64,11 +64,11 @@ public class DummyClient extends AbstractNodeMain {
 	 * 
 	 * @return An ObjectDetection with the pose and type of the detected object
 	 */
-	public ObjectDetection callObjDetectionService() {
+	public knowrob_tutorial_msgs.ObjectDetection callObjDetectionServiceRaw() {
 		
 		// wait for node to be ready
 		try {
-			while(node ==null) {
+			while(node == null) {
 				Thread.sleep(200);
 			}
 		} catch (InterruptedException e) {
@@ -113,6 +113,12 @@ public class DummyClient extends AbstractNodeMain {
 			e1.printStackTrace();
 		}
 		
+		System.err.println(r._TYPE);
+		return r;
+	}
+		
+
+	public ObjectDetection callObjDetectionService(knowrob_tutorial_msgs.ObjectDetection r) {	
 		return new ObjectDetection(r);
 	}
 
