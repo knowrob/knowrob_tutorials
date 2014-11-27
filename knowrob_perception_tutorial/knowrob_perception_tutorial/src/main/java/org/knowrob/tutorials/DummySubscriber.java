@@ -126,7 +126,7 @@ public class DummySubscriber extends AbstractNodeMain {
 									"], ['DummyObjectDetection'], ObjInst)";
 
 						// uncomment to see the resulting query printed to the KnowRob console
-						System.err.println(q);
+						//System.err.println(q);
 						
 						PrologInterface.executeQuery(q);
 					}
