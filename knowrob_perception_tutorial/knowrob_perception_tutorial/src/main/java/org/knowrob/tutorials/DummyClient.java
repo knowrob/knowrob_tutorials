@@ -118,8 +118,16 @@ public class DummyClient extends AbstractNodeMain {
 	}
 		
 
-	public ObjectDetection callObjDetectionService(knowrob_tutorial_msgs.ObjectDetection r) {	
-		return new ObjectDetection(r);
+	/**
+	 * Wrapper around the 'real' worker method to convert the result from a rosjava
+	 * message object (which cannot be accessed from Prolog) into a 'normal' Java
+	 * object.
+	 * 
+	 * @return Instance of the ObjectDetection datastructure
+	 */
+	public ObjectDetection callObjDetectionService() {
+		knowrob_tutorial_msgs.ObjectDetection msg = callObjDetectionServiceRaw();
+		return new ObjectDetection(msg);
 	}
 
 }
