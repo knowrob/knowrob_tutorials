@@ -1,0 +1,3 @@
+#!/bin/bash
+
+$(rospack find knowrob_perception_tutorial)/knowrob_perception_tutorial/build/install/knowrob_perception_tutorial/bin/knowrob_perception_tutorial org.knowrob.tutorials.DummyService
