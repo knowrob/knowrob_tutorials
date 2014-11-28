@@ -14,7 +14,12 @@
   <buildtool_depend>catkin</buildtool_depend>
 
   <build_depend>knowrob_map_tools</build_depend>
+  <build_depend>knowrob_map_data</build_depend>
+  <build_depend>knowrob_actions</build_depend>
+  
   <run_depend>knowrob_map_tools</run_depend>
+  <run_depend>knowrob_map_data</run_depend>
+  <run_depend>knowrob_actions</run_depend>
 
   <export>
     <rosdoc config="rosdoc.yaml"/>
