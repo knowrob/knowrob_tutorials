@@ -19,12 +19,15 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % dependencies
 
-:- register_ros_package(mod_vis).
-:- register_ros_package(ias_semantic_map).
+:- register_ros_package(knowrob_vis).
+:- register_ros_package(knowrob_map_tools).
+:- register_ros_package(knowrob_map_data).
+:- register_ros_package(knowrob_actions).
 
+:- owl_parse('package://knowrob_map_data/owl/ccrl2_semantic_map.owl').
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % parse OWL files, register name spaces
 
-:- rdf_db:rdf_register_ns(pancake, 'http://ias.cs.tum.edu/kb/pancake-making.owl#', [keep(true)]).
-:- rdf_db:rdf_register_ns(map_obj, 'http://ias.cs.tum.edu/kb/ccrl2_map_objects.owl#', [keep(true)]).
+:- rdf_db:rdf_register_ns(pancake, 'http://knowrob.org/kb/pancake-making.owl#', [keep(true)]).
+:- rdf_db:rdf_register_ns(map_obj, 'http://knowrob.org/kb/ccrl2_map_objects.owl#', [keep(true)]).

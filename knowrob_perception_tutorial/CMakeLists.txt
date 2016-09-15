@@ -1,36 +1,29 @@
-cmake_minimum_required(VERSION 2.4.6)
-include($ENV{ROS_ROOT}/core/rosbuild/rosbuild.cmake)
+##############################################################################
+# CMake
+##############################################################################
 
-rosbuild_init()
-rosbuild_include(rosprolog utils)
+cmake_minimum_required(VERSION 2.8.3)
+project(knowrob_perception_tutorial)
 
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
+##############################################################################
+# Catkin
+##############################################################################
 
-rosbuild_genmsg()
-rosbuild_gensrv()
+find_package(catkin REQUIRED rosjava_build_tools)
 
+# Set the gradle targets you want catkin's make to run by default, e.g.
+#   catkin_rosjava_setup(installApp)
+# Note that the catkin_create_rosjava_xxx scripts will usually automatically
+# add tasks to this for you when you create subprojects.
+catkin_rosjava_setup(installApp publishMavenJavaPublicationToMavenRepository writeClasspath)
 
-add_classpath(${PROJECT_SOURCE_DIR}/bin)
-add_runtime_classpath(${PROJECT_SOURCE_DIR}/bin)
+catkin_package()
 
-rosbuild_find_ros_package(rosjava_jni)
-add_classpath(${rosjava_jni_PACKAGE_PATH}/bin)
+##############################################################################
+# Installation
+##############################################################################
 
-add_java_source_dir(${PROJECT_SOURCE_DIR}/src)
-rospack_add_java_executable(dummy_service edu.tum.cs.ias.knowrob.tutorial.DummyService)
-rospack_add_java_executable(dummy_publisher edu.tum.cs.ias.knowrob.tutorial.DummyPublisher)
-
-
-
-# replace path to local OWL files
-
-rosbuild_find_ros_package(ias_knowledge_base)
-set( OWL_PATH_PREFIX ${ias_knowledge_base_PACKAGE_PATH} )
-fix_ros_destination_path(OWL_PATH_PREFIX)
-
-file(GLOB inputs owl/*.in)
-foreach( _in ${inputs} )
-  string(REPLACE ".in" "" _out ${_in})
-  configure_file( ${_in} ${_out} )
-endforeach( _in )
+# Change this to match the maven group name you have specified in the 
+# allprojects closure the root build.gradle
+install(DIRECTORY ${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_MAVEN_DESTINATION}/org/knowrob/${PROJECT_NAME}/ 
+        DESTINATION ${CATKIN_GLOBAL_MAVEN_DESTINATION}/org/knowrob/${PROJECT_NAME})

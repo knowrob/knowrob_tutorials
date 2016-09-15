@@ -1,0 +1,22 @@
+<package>
+  <name>knowrob_tutorial_msgs</name>
+  <version>1.0.0</version>
+  <description>Message definitions for the KnowRob tutorials</description>
+  <maintainer email="tenorth@cs.uni-bremen.de">Moritz Tenorth</maintainer>
+
+  <license>LGPL</license>
+
+  <url type="website">http://knowrob.org/doc/</url>
+  <url type="bugtracker">https://github.com/knowrob/knowrob/issues</url>
+
+  <author>Moritz Tenorth</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  
+  <build_depend>message_generation</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+
+  <run_depend>message_runtime</run_depend>
+  <run_depend>geometry_msgs</run_depend>
+
+</package>

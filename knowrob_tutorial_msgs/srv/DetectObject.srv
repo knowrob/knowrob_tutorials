@@ -1,0 +1,2 @@
+---
+knowrob_tutorial_msgs/ObjectDetection obj  # type and pose of detected object
